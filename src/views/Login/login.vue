@@ -9,28 +9,63 @@
         <el-input type="password" v-model="ruleForm.password" autocomplete="off" placeholder="密码"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+        <el-button type="primary" @click="submitForm">登录</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
  
 <script>
+import { LoginAPI } from "@/request/api.js";
 export default {
   data() {
     return {
       ruleForm: {},
+      //输入框校验规则
       rules: {
         username: [
-          { required: true, message: "账号不能为空", trigger: "blur" },
-          { min: 3, max: 20, message: "长度在3到20个字符", trigger: "blur" },
+          // { required: true, message: "账号不能为空", trigger: "blur" },
+          // { min: 3, max: 20, message: "长度在3到20个字符", trigger: "blur" },
+          { validator: this.validator, trigger: "blur" },
         ],
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" },
-          { min: 3, max: 20, message: "长度在3到20个字符", trigger: "blur" },
         ],
       },
     };
+  },
+  methods: {
+    //账号的自定义校验
+    validator(rule, value, callback) {
+      if (!value) {
+        return callback("请输入账号");
+      }
+      callback();
+    },
+    //登录校验
+    submitForm() {
+      this.$refs["ruleForm"].validate((bool) => {
+        console.log(bool);
+        if (bool) {
+          // 登录
+          LoginAPI({
+            password: this.ruleForm.password,
+            username: this.ruleForm.username,
+          }).then((res) => {
+            if (res.errno == 0) {
+              this.$router.push("/homepage");
+            } else {
+              this.$message({
+                message: res.errmsg,
+                type: "error",
+              });
+            }
+          });
+        } else {
+          return;
+        }
+      });
+    },
   },
 };
 </script>
@@ -38,7 +73,7 @@ export default {
 <style lang = "less" scoped>
 #login {
   height: 100vh;
-  background: #344a5f;
+  background: #324057;
   overflow: hidden;
   .el-form {
     position: fixed;
