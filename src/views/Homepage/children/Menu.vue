@@ -7,10 +7,11 @@
       text-color="#BFCBD9"
       active-text-color="#20A0FF"
       :unique-opened="true"
+      :collapse="true"
     >
       <el-submenu :index="index+''" v-for="(item,index) in menuArr" :key="index">
         <template slot="title">
-          <i :class="item.icon"></i>
+          <i  :class="item.icon"></i>
           <span>{{item.title}}</span>
         </template>
         <el-menu-item

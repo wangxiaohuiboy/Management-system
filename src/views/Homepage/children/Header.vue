@@ -2,7 +2,7 @@
   <div class="header">
     <div class="header-left">
       <h3>商品管理系统</h3>
-      <i class="el-icon-menu"></i>
+      <i class="el-icon-menu" ></i>
     </div>
     <el-dropdown trigger="click">
       <span class="el-dropdown-link">

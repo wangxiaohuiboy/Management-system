@@ -73,7 +73,8 @@ export default {
 <style lang = "less" scoped>
 #login {
   height: 100vh;
-  background: #324057;
+  background: url("../../assets/bg.jpg");
+  /* background: #324057; */
   overflow: hidden;
   .el-form {
     position: fixed;
@@ -81,6 +82,9 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    background: rgba(255,255,255,0.5);
+    padding: 50px;
+    border-radius: 16px;
     h2 {
       line-height: 30px;
       font-size: 24px;
