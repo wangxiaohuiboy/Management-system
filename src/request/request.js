@@ -7,6 +7,8 @@ const instance = axios.create({
 
 //请求拦截
 instance.interceptors.request.use(config => {
+    if (localStorage.getItem("token"))
+        config.headers["X-Nideshop-Token"] = localStorage.getItem("token")
     return config;
 }, err => {
     return Promise.reject(err);

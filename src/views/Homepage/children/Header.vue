@@ -4,13 +4,13 @@
       <h3>商品管理系统</h3>
       <i class="el-icon-menu" ></i>
     </div>
-    <el-dropdown trigger="click">
+    <el-dropdown  trigger="click">
       <span class="el-dropdown-link">
         admin
         <i class="el-icon-caret-bottom"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>退出登录</el-dropdown-item>
+        <el-dropdown-item >退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
@@ -52,5 +52,8 @@ export default {
     color: #fff;
     padding: 0 15px;
   }
+}
+.el-dropdown-menu{
+  top: 45px !important;
 }
 </style>

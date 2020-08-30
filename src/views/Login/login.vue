@@ -53,6 +53,11 @@ export default {
             username: this.ruleForm.username,
           }).then((res) => {
             if (res.errno == 0) {
+              // 存token
+              localStorage.setItem("token",res.data.token)
+              // 权限菜单存到vuex
+              this.$store.commit("setmenu", res.data.menu);
+              // 跳转
               this.$router.push("/homepage");
             } else {
               this.$message({
@@ -82,7 +87,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.5);
     padding: 50px;
     border-radius: 16px;
     h2 {
