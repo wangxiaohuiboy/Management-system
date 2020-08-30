@@ -1,26 +1,28 @@
 <template>
   <div class="menu">
-    <el-menu
-      default-active="1"
-      class="el-menu-vertical-demo"
-      background-color="#324056"
-      text-color="#BFCBD9"
-      active-text-color="#20A0FF"
-      :unique-opened="true"
-      :router="true"
-    >
-      <el-submenu :index="index+''" v-for="(item,index) in newmenuArr" :key="index">
-        <template slot="title">
-          <i :class="item.icon"></i>
-          <span>{{item.title}}</span>
-        </template>
-        <el-menu-item
-          v-for="(items,indexs) in item.subArr"
-          :key="indexs"
-          :index="items.index"
-        >{{items.text}}</el-menu-item>
-      </el-submenu>
-    </el-menu>
+      <el-menu
+        :default-active="activeRoute"
+        class="el-menu-vertical-demo"
+        :class="this.$store.state.isCollapse==true?'':'active'"
+        background-color="#324056"
+        text-color="#BFCBD9"
+        active-text-color="#20A0FF"
+        :unique-opened="true"
+        :router="true"
+        :collapse="this.$store.state.isCollapse"
+      >
+        <el-submenu :index="index+''" v-for="(item,index) in newmenuArr" :key="index">
+          <template slot="title">
+            <i :class="item.icon"></i>
+            <span>{{item.title}}</span>
+          </template>
+          <el-menu-item
+            v-for="(items,indexs) in item.subArr"
+            :key="indexs"
+            :index="items.index"
+          >{{items.text}}</el-menu-item>
+        </el-submenu>
+      </el-menu>
   </div>
 </template>
  
@@ -79,6 +81,11 @@ export default {
       ],
     };
   },
+  computed: {
+    activeRoute() {
+      return this.$route.path;
+    },
+  },
   created() {
     var menu = this.$store.state.menu;
 
@@ -111,6 +118,7 @@ export default {
  
 <style lang = "less" scoped>
 .menu {
+  width: 100%;
   position: absolute;
   top: 70px;
   left: 0;
@@ -118,10 +126,14 @@ export default {
   background: rgb(50, 65, 87);
   overflow-y: auto;
   .el-menu {
-    width: 250px;
+    width: 100%;
     background: rgb(50, 65, 87);
   }
 }
+.active {
+  width: 250px;
+}
+
 .menu::-webkit-scrollbar {
   width: 0;
 }

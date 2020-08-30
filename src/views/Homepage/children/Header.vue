@@ -2,15 +2,15 @@
   <div class="header">
     <div class="header-left">
       <h3>商品管理系统</h3>
-      <i class="el-icon-menu" ></i>
+      <i @click="switchSidebar" class="el-icon-menu"></i>
     </div>
-    <el-dropdown  trigger="click">
+    <el-dropdown @command="handleCommand" trigger="click">
       <span class="el-dropdown-link">
         admin
         <i class="el-icon-caret-bottom"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item >退出登录</el-dropdown-item>
+        <el-dropdown-item command="logout">退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
@@ -20,6 +20,21 @@
 export default {
   data() {
     return {};
+  },
+  methods: {
+    handleCommand(command) {
+      if (command == "logout") {
+        localStorage.removeItem("token");
+        window.location.reload();
+      }
+    },
+    // 切换侧边栏
+    switchSidebar() {
+      //展开收起
+      this.$store.commit("setisCollapse");
+      //缩小侧边栏
+      
+    },
   },
 };
 </script>
@@ -53,7 +68,7 @@ export default {
     padding: 0 15px;
   }
 }
-.el-dropdown-menu{
+.el-dropdown-menu {
   top: 45px !important;
 }
 </style>
