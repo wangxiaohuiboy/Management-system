@@ -8,20 +8,20 @@
         <el-button size="mini" type="primary">重置</el-button>
       </div>
       <el-table :data="tableData" border style="width: 100%">
-        <el-table-column prop="id" label="ID" ></el-table-column>
+        <el-table-column prop="id" label="ID"></el-table-column>
         <el-table-column prop="name" label="商品名称" width="250"></el-table-column>
-        <el-table-column prop="retail_price" label="售价" ></el-table-column>
-        <el-table-column prop="goods_number" label="库存" ></el-table-column>
-        <el-table-column prop="is_new" label="新品" >
+        <el-table-column prop="retail_price" label="售价"></el-table-column>
+        <el-table-column prop="goods_number" label="库存"></el-table-column>
+        <el-table-column prop="is_new" label="新品">
           <div slot-scope="scope">{{scope.row.is_new?'是':'否'}}</div>
         </el-table-column>
-        <el-table-column prop="is_hot" label="人气" >
+        <el-table-column prop="is_hot" label="人气">
           <div slot-scope="scope">{{scope.row.is_hot?'是':'否'}}</div>
         </el-table-column>
-        <el-table-column prop="is_on_sale" label="上架" >
+        <el-table-column prop="is_on_sale" label="上架">
           <div slot-scope="scope">{{scope.row.is_on_sale?'是':'否'}}</div>
         </el-table-column>
-        <el-table-column prop="sort_order" label="排序" ></el-table-column>
+        <el-table-column prop="sort_order" label="排序"></el-table-column>
         <el-table-column prop="address" label="操作" width="150">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -59,22 +59,22 @@ export default {
     };
   },
   created() {
-    this.GetGoodList(this.pageSize, this.currentPage);
+    this.GetGoodList(this.pageSize, this.currentPage, "");
   },
   methods: {
     //每页多少条数据
     handleSizeChange(size) {
-      this.GetGoodList(size, this.currentPage);
+      this.GetGoodList(size, this.currentPage, this.userQueryGood);
     },
     //当前是第几页
     handleCurrentChange(page) {
-      this.GetGoodList(this.pageSize, page);
+      this.GetGoodList(this.pageSize, page, this.userQueryGood);
     },
     //封装一个请求函数
-    GetGoodList(size, page) {
+    GetGoodList(size, page, name) {
       getGoodsDataAPI({
         page: page,
-        name: "",
+        name: name,
         size: size,
       }).then((res) => {
         this.tableData = res.data.data;
@@ -85,16 +85,7 @@ export default {
     },
     //查询商品
     queryGoods() {
-      getQueryGoodsAPI({
-        page: this.currentPage,
-        name: this.userQueryGood,
-        size: this.pageSize,
-      }).then((res) => {
-        this.tableData = res.data.data;
-        this.count = res.data.count;
-        this.currentPage = res.data.currentPage;
-        this.pageSize = res.data.pageSize;
-      });
+      this.GetGoodList(this.pageSize, 1, this.userQueryGood);
     },
   },
 };
