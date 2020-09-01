@@ -3,9 +3,9 @@
     <div class="goodContent">
       <div class="good-top">
         <el-input type="text" placeholder="商品名称" autocomplete="off" v-model="userQueryGood"></el-input>
-        <el-button @click="queryGoods" size="mini" type="primary">查询</el-button>
-        <el-button size="mini" type="primary">添加</el-button>
-        <el-button size="mini" type="primary">重置</el-button>
+        <el-button @click="queryGoods" size="small" type="primary">查询</el-button>
+        <el-button size="small" type="primary">添加</el-button>
+        <el-button size="small" type="primary">重置</el-button>
       </div>
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column prop="id" label="ID"></el-table-column>
@@ -19,12 +19,12 @@
           <div slot-scope="scope">{{scope.row.is_hot?'是':'否'}}</div>
         </el-table-column>
         <el-table-column prop="is_on_sale" label="上架">
-          <div slot-scope="scope">{{scope.row.is_on_sale?'是':'否'}}</div>
+          <div slot-scope="scope">{{scope.row.is_delete?'否':'是'}}</div>
         </el-table-column>
         <el-table-column prop="sort_order" label="排序"></el-table-column>
         <el-table-column prop="address" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -38,6 +38,10 @@
         :total="count"
       ></el-pagination>
     </div>
+    <footer class="content-bottom">
+      <section class="content-bottom-left">Copyright © 2019-2020 你大爷. All rights reserved.</section>
+      <section class="content-bottom-right">Version 1.0.0</section>
+    </footer>
   </div>
 </template>
  
@@ -59,23 +63,25 @@ export default {
     };
   },
   created() {
-    this.GetGoodList(this.pageSize, this.currentPage, "");
+    this.GetGoodList();
   },
   methods: {
     //每页多少条数据
     handleSizeChange(size) {
-      this.GetGoodList(size, this.currentPage, this.userQueryGood);
+      this.pageSize = size;
+      this.GetGoodList();
     },
     //当前是第几页
     handleCurrentChange(page) {
-      this.GetGoodList(this.pageSize, page, this.userQueryGood);
+      this.currentPage = page;
+      this.GetGoodList();
     },
     //封装一个请求函数
-    GetGoodList(size, page, name) {
+    GetGoodList() {
       getGoodsDataAPI({
-        page: page,
-        name: name,
-        size: size,
+        page: this.currentPage,
+        name: this.userQueryGood,
+        size: this.pageSize,
       }).then((res) => {
         this.tableData = res.data.data;
         this.count = res.data.count;
@@ -85,7 +91,12 @@ export default {
     },
     //查询商品
     queryGoods() {
-      this.GetGoodList(this.pageSize, 1, this.userQueryGood);
+      this.currentPage = 1;
+      this.GetGoodList();
+    },
+    //编辑按钮
+    handleEdit(a, row) {
+      this.$router.push("/editgood/" + row.id);
     },
   },
 };
@@ -94,7 +105,7 @@ export default {
 <style lang = "less" scoped>
 .good {
   height: 100%;
-  padding: 25px 15px;
+  padding: 15px 15px;
   overflow-y: auto;
   box-sizing: border-box;
   .goodContent {
@@ -113,14 +124,23 @@ export default {
         height: 32px;
       }
     }
-    .el-button {
-      width: 56px;
-      height: 32px;
-    }
     .el-pagination {
       float: right;
       margin-top: 15px;
       margin-bottom: 30px;
+    }
+  }
+  .content-bottom {
+    .content-bottom-left {
+      float: left;
+    }
+    .content-bottom-right {
+      float: right;
+    }
+    section {
+      font-size: 12px;
+      color: #000;
+      padding: 8px 0 0;
     }
   }
 }

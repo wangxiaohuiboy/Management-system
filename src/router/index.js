@@ -23,6 +23,10 @@ const routes = [
 ]
 
 var homepageRoutes = {
+  "/editgood": {
+    path: "/editgood/:gid",
+    component: () => import(/* webpackChunkName: "goods" */ '../views/good/EditGood.vue')
+  },
   "/good": {
     path: "/good",
     component: () => import(/* webpackChunkName: "goods" */ '../views/good/Good.vue')
