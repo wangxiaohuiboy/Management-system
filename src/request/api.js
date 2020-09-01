@@ -12,3 +12,5 @@ export const getGoodsDetailsAPI = (params) => request.get('http://kumanxuan1.f33
 export const getQueryClassificationAPI = () => request.get('http://kumanxuan1.f3322.net:8360/admin/category')
 // 查询品牌列表
 export const getQueryBrandAPI = (params) => request.get('http://kumanxuan1.f3322.net:8360/admin/brand', { params })
+// 上传图片
+export const uploadNewPicAPI = (params) => request.post('http://kumanxuan1.f3322.net:8360/admin/upload/goodNewPic', params)

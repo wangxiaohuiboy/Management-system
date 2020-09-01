@@ -38,10 +38,6 @@
         :total="count"
       ></el-pagination>
     </div>
-    <footer class="content-bottom">
-      <section class="content-bottom-left">Copyright © 2019-2020 你大爷. All rights reserved.</section>
-      <section class="content-bottom-right">Version 1.0.0</section>
-    </footer>
   </div>
 </template>
  
@@ -104,7 +100,7 @@ export default {
  
 <style lang = "less" scoped>
 .good {
-  height: 100%;
+  height: 97%;
   padding: 15px 15px;
   overflow-y: auto;
   box-sizing: border-box;
@@ -128,19 +124,6 @@ export default {
       float: right;
       margin-top: 15px;
       margin-bottom: 30px;
-    }
-  }
-  .content-bottom {
-    .content-bottom-left {
-      float: left;
-    }
-    .content-bottom-right {
-      float: right;
-    }
-    section {
-      font-size: 12px;
-      color: #000;
-      padding: 8px 0 0;
     }
   }
 }
