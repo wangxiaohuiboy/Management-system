@@ -85,16 +85,36 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="商品属性">
-        <el-button type="primary">添加商品属性</el-button>
-        <table>
-          <thead>
-            <tr>
-              <th>参数名称</th>
-              <th>参数值</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-        </table>
+        <el-button style="margin-bottom:10px" type="primary" @click="addGoodsAttribute">添加商品属性</el-button>
+        <el-table border :data="currentAttributeArr" style="width: 100%">
+          <el-table-column label="参数名称">
+            <template slot-scope="scope">
+              <el-select v-model="scope.row.attribute_id" placeholder="请选择参数名称" style="width: 198">
+                <el-option
+                  v-for="att in attributeData"
+                  :key="att.id"
+                  :label="att.name"
+                  :value="att.id"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="参数值">
+            <template slot-scope="scope">
+              <el-input style="width: 354" v-model="scope.row.value"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button
+                size="medium"
+                style="height:40px"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-tab-pane>
       <el-tab-pane label="商品详情">商品详情</el-tab-pane>
     </el-tabs>
@@ -108,6 +128,7 @@ import {
   getQueryBrandAPI,
   uploadNewPicAPI,
   editorNewGoodAPI,
+  getQueryAttributeAPI,
 } from "@/request/api.js";
 export default {
   data() {
@@ -118,22 +139,11 @@ export default {
           name: "王小虎",
           address: "上海市普陀区金沙江路 1518 弄",
         },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
       ],
+      // 当前页面的属性分组
+      currentAttributeArr: [],
+      //全部属性数组
+      attributeData: [],
       //商品分类数组
       categroyLists: [],
       //商品详情
@@ -178,6 +188,8 @@ export default {
       this.form = res[1].data;
       this.imageUrl = res[1].data.list_pic_url;
       this.is_delete = res[1].data.is_delete == 1 ? false : true;
+      this.currentAttributeArr = res[1].data.attribute;
+      console.log(res[1].data.attribute);
       let is_new = res[1].data.is_new ? "新品" : "";
       let is_hot = res[1].data.is_hot ? "人气" : "";
       this.type.push(is_new, is_hot);
@@ -185,6 +197,14 @@ export default {
         let obj = { name: "", url: el.img_url };
         this.ShufflingArr.push(obj);
       });
+    });
+    //查询属性列表
+    getQueryAttributeAPI({
+      page: 1,
+      size: 110,
+    }).then((res) => {
+      this.attributeData = res.data.data;
+      console.log(res);
     });
   },
   methods: {
@@ -232,6 +252,15 @@ export default {
     saveEditorNewGood() {
       editorNewGoodAPI({}).then((res) => {
         console.log(res);
+      });
+    },
+    //添加商品属性
+    addGoodsAttribute() {
+      this.currentAttributeArr.push({});
+    },
+    handleDelete(index, row) {
+      this.currentAttributeArr.forEach((el) => {
+        if (el.id == row.id) this.currentAttributeArr.splice(1, 1, el);
       });
     },
   },

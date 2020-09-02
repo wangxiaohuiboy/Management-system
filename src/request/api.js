@@ -18,3 +18,5 @@ export const uploadNewPicAPI = (params) => request.post('http://kumanxuan1.f3322
 export const getStatDataAPI = () => request.get('http://kumanxuan1.f3322.net:8360/admin/stat')
 // 编辑/新增商品
 export const editorNewGoodAPI = (params) => request.post('http://kumanxuan1.f3322.net:8360/admin/goods/store', params) 
+// 查询属性列表
+export const getQueryAttributeAPI = (params) => request.get('http://kumanxuan1.f3322.net:8360/admin/attribute', { params })
