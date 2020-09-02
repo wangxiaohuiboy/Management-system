@@ -1,98 +1,103 @@
 <template>
   <div class="editgood">
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="所属分类">
-        <el-select v-model="form.category_id" placeholder="请选择所属分类">
-          <el-option
-            v-for="category in categroyLists"
-            :key="category.id"
-            :label="category.name"
-            :value="category.id"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="商品名称">
-        <el-input v-model="form.name"></el-input>
-      </el-form-item>
-      <el-form-item label="所属品牌">
-        <el-select v-model="form.brand_id" placeholder="请选择所属品牌">
-          <el-option v-for="item in brand" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="商品简介">
-        <el-input style="width:225px;height:54px" type="textarea" v-model="form.goods_brief"></el-input>
-      </el-form-item>
-      <el-form-item label="商品图片">
-        <!-- <el-upload
-          class="avatar-uploader"
-          action="http://kumanxuan1.f3322.net:8360/admin/upload/goodNewPic"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-          :headers="headers"
-          name="good_pic"
-        >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>-->
-        <el-upload
-          class="avatar-uploader"
-          action
-          name="good_pic"
-          :http-request="uploadRequest"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-          :headers="headers"
-        >
-          <img style="width:187px;height:105px" v-if="imageUrl" :src="imageUrl" class="avatar" />
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-         <span>推荐图片尺寸：750*420</span>
-      </el-form-item>
-      <el-form-item label="轮播图图片">
-        <el-upload
-          action
-          name="good_pic"
-          :http-request="uploadRequest2"
-          list-type="picture-card"
-          :on-preview="handlePictureCardPreview"
-          :on-remove="handleRemove"
-          :show-file-list="true"
-          :file-list="ShufflingArr"
-        >
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt />
-        </el-dialog>
-      </el-form-item>
-      <el-form-item label="商品单位">
-        <el-input v-model="form.goods_unit"></el-input>
-      </el-form-item>
-      <el-form-item label="商品库存">
-        <el-input v-model="form.goods_number"></el-input>
-      </el-form-item>
-      <el-form-item label="商品售价">
-        <el-input v-model="form.retail_price"></el-input>
-      </el-form-item>
-      <el-form-item label="推荐类型">
-        <el-checkbox-group v-model="type">
-          <el-checkbox label="新品" name="type"></el-checkbox>
-          <el-checkbox label="人气" name="type"></el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="上架">
-        <el-switch v-model="is_delete"></el-switch>
-      </el-form-item>
-      <el-form-item label="排序">
-        <el-input v-model="form.sort_order"></el-input>
-      </el-form-item>
-      <div class="botton" style="margin-left:120px">
-        <el-button type="primary">确认保存</el-button>
-        <el-button>取消</el-button>
-      </div>
-    </el-form>
+    <el-tabs type="border-card">
+      <el-tab-pane label="基本信息">
+        <el-form ref="form" :model="form" label-width="120px">
+          <el-form-item label="所属分类">
+            <el-select v-model="form.category_id" placeholder="请选择所属分类">
+              <el-option
+                v-for="category in categroyLists"
+                :key="category.id"
+                :label="category.name"
+                :value="category.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="商品名称">
+            <el-input v-model="form.name"></el-input>
+          </el-form-item>
+          <el-form-item label="所属品牌">
+            <el-select v-model="form.brand_id" placeholder="请选择所属品牌">
+              <el-option v-for="item in brand" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="商品简介">
+            <el-input style="width:225px;height:54px" type="textarea" v-model="form.goods_brief"></el-input>
+          </el-form-item>
+          <el-form-item label="商品图片">
+            <el-upload
+              class="avatar-uploader"
+              action
+              name="good_pic"
+              :http-request="uploadRequest"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+              :headers="headers"
+            >
+              <img style="width:187px;height:105px" v-if="imageUrl" :src="imageUrl" class="avatar" />
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+            <span>推荐图片尺寸：750*420</span>
+          </el-form-item>
+          <el-form-item label="轮播图图片">
+            <el-upload
+              action
+              name="good_pic"
+              :http-request="uploadRequest2"
+              list-type="picture-card"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+              :show-file-list="true"
+              :file-list="ShufflingArr"
+            >
+              <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog :visible.sync="dialogVisible">
+              <img width="100%" :src="dialogImageUrl" alt />
+            </el-dialog>
+          </el-form-item>
+          <el-form-item label="商品单位">
+            <el-input v-model="form.goods_unit"></el-input>
+          </el-form-item>
+          <el-form-item label="商品库存">
+            <el-input v-model="form.goods_number"></el-input>
+          </el-form-item>
+          <el-form-item label="商品售价">
+            <el-input v-model="form.retail_price"></el-input>
+          </el-form-item>
+          <el-form-item label="推荐类型">
+            <el-checkbox-group v-model="type">
+              <el-checkbox label="新品" name="type"></el-checkbox>
+              <el-checkbox label="人气" name="type"></el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="上架">
+            <el-switch v-model="is_delete"></el-switch>
+          </el-form-item>
+          <el-form-item label="排序">
+            <el-input v-model="form.sort_order"></el-input>
+          </el-form-item>
+          <div class="botton" style="margin-left:120px">
+            <el-button type="primary" @click="saveEditorNewGood">确认保存</el-button>
+            <el-button>取消</el-button>
+          </div>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="商品属性">
+        <el-button type="primary">添加商品属性</el-button>
+        <table>
+          <thead>
+            <tr>
+              <th>参数名称</th>
+              <th>参数值</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+        </table>
+      </el-tab-pane>
+      <el-tab-pane label="商品详情">商品详情</el-tab-pane>
+    </el-tabs>
   </div>
 </template>
  
@@ -102,10 +107,33 @@ import {
   getQueryClassificationAPI,
   getQueryBrandAPI,
   uploadNewPicAPI,
+  editorNewGoodAPI,
 } from "@/request/api.js";
 export default {
   data() {
     return {
+      tableData: [
+        {
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-01",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1519 弄",
+        },
+        {
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
+      ],
       //商品分类数组
       categroyLists: [],
       //商品详情
@@ -130,16 +158,6 @@ export default {
     };
   },
   created() {
-    // // 获取商品分类
-    // getQueryClassificationAPI().then((res) => {
-    //   if (res.errno == 0) this.categroyLists = res.data;
-    // });
-    // //获取商品详情
-    // getGoodsDetailsAPI({
-    //   id: this.$route.params.gid,
-    // }).then((res) => {
-    //   if (res.errno == 0) this.form = res.data;
-    // });
     // 查询品牌
     getQueryBrandAPI({
       page: 1,
@@ -174,9 +192,7 @@ export default {
     uploadRequest2(data) {
       let formdata = new FormData();
       formdata.append("good_pic", data.file);
-      uploadNewPicAPI(formdata).then((res) => {
-        console.log(res);
-      });
+      uploadNewPicAPI(formdata).then((res) => {});
     },
     //上传图片请求
     uploadRequest(data) {
@@ -185,9 +201,6 @@ export default {
       uploadNewPicAPI(formdata).then((res) => {
         if (res.errno === 0) this.imageUrl = res.data.fileUrl;
       });
-    },
-    onSubmit() {
-      console.log("submit!");
     },
     //商品图片上传成功后的钩子
     handleAvatarSuccess(res, file) {
@@ -215,6 +228,12 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
+    // 编辑新增商品
+    saveEditorNewGood() {
+      editorNewGoodAPI({}).then((res) => {
+        console.log(res);
+      });
+    },
   },
 };
 </script>
@@ -223,9 +242,12 @@ export default {
 .editgood {
   height: 97%;
   background: #fff;
-  padding: 15px;
   overflow-y: auto;
   box-sizing: border-box;
+  .el-tab-pane {
+    padding-bottom: 30px;
+    padding-top: 15px;
+  }
   .el-form-item {
     .el-input {
       width: 225px;

@@ -2,6 +2,7 @@ import axios from 'axios'
 
 //创建实例
 const instance = axios.create({
+    baseURL:"",
     timeout: 5000
 });
 

@@ -14,3 +14,7 @@ export const getQueryClassificationAPI = () => request.get('http://kumanxuan1.f3
 export const getQueryBrandAPI = (params) => request.get('http://kumanxuan1.f3322.net:8360/admin/brand', { params })
 // 上传图片
 export const uploadNewPicAPI = (params) => request.post('http://kumanxuan1.f3322.net:8360/admin/upload/goodNewPic', params)
+// 运营数据
+export const getStatDataAPI = () => request.get('http://kumanxuan1.f3322.net:8360/admin/stat')
+// 编辑/新增商品
+export const editorNewGoodAPI = (params) => request.post('http://kumanxuan1.f3322.net:8360/admin/goods/store', params) 
