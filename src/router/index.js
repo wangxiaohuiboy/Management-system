@@ -23,9 +23,13 @@ const routes = [
 ]
 
 var homepageRoutes = {
+  "/edittopic": {
+    path: "/edittopic/:tid",
+    component: () => import(/* webpackChunkName: "edittopic" */ '../views/topic/EditTopic.vue')
+  },
   "/editgood": {
     path: "/editgood/:gid",
-    component: () => import(/* webpackChunkName: "goods" */ '../views/good/EditGood.vue')
+    component: () => import(/* webpackChunkName: "editgood" */ '../views/good/EditGood.vue')
   },
   "/good": {
     path: "/good",

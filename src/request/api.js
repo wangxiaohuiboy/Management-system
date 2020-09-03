@@ -23,4 +23,6 @@ export const getQueryAttributeAPI = (params) => request.get('http://kumanxuan1.f
 // 查询分类接口
 export const getCategoryAPI = () => request.get('http://kumanxuan1.f3322.net:8360/admin/category')
 // 查询专题列表
-export const getQueryTopicAPI = () => request.get('http://kumanxuan1.f3322.net:8360/admin/topic')
+export const getQueryTopicAPI = (params) => request.get('http://kumanxuan1.f3322.net:8360/admin/topic',{params})
+// 专题详情
+export const getProjectDetailsAPI = (params) => request.get('http://kumanxuan1.f3322.net:8360/admin/topic/info',{params})
