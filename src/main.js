@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import './plugins/element.js'
 import './plugins/vecharts'
+import "./plugins/quilleditor"
 import './assets/styles/normalize.css'
 
 Vue.config.productionTip = false

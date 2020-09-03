@@ -79,8 +79,8 @@
             <el-input v-model="form.sort_order"></el-input>
           </el-form-item>
           <div class="botton" style="margin-left:120px">
-            <el-button type="primary" @click="saveEditorNewGood">确认保存</el-button>
-            <el-button>取消</el-button>
+            <el-button type="primary" @click="saveEditorNewGood(form)">确认保存</el-button>
+            <el-button @click="cancel">取消</el-button>
           </div>
         </el-form>
       </el-tab-pane>
@@ -116,12 +116,26 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="商品详情">商品详情</el-tab-pane>
+      <el-tab-pane label="商品详情">
+        <quill-editor
+          v-model="content"
+          ref="myQuillEditor"
+          :options="editorOption"
+          @blur="onEditorBlur($event)"
+          @focus="onEditorFocus($event)"
+          @change="onEditorChange($event)"
+          style="height:600px"
+        ></quill-editor>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
  
 <script>
+import { quillEditor } from "vue-quill-editor";
+import * as Quill from "quill"; //引入编辑器
+import { ImageDrop } from "quill-image-drop-module";
+Quill.register("modules/imageDrop", ImageDrop);
 import {
   getGoodsDetailsAPI,
   getQueryClassificationAPI,
@@ -130,16 +144,51 @@ import {
   editorNewGoodAPI,
   getQueryAttributeAPI,
 } from "@/request/api.js";
+import loginVue from "../Login/login.vue";
 export default {
   data() {
     return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
+      content: `<p>insert text here...</p>`,
+      editorOption: {
+        modules: {
+          //图片拖到文本框自动添加
+          imageDrop: true,
+          //富文本配置项
+          toolbar: [
+            ["bold", "italic", "underline", "strike"],
+            //加粗，斜体，下划线，删除线
+            ["blockquote", "code-block"],
+            //引用，代码块
+            [{ header: 1 }, { header: 2 }],
+            // 标题，键值对的形式；1、2表示字体大小
+            [{ list: "ordered" }, { list: "bullet" }],
+            //列表
+            [{ script: "sub" }, { script: "super" }],
+            // 上下标
+            [{ indent: "-1" }, { indent: "+1" }],
+            // 缩进
+            [{ direction: "rtl" }],
+            // 文本方向
+            [{ size: ["small", false, "large", "huge"] }],
+            // 字体大小
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            //几级标题
+            [{ color: [] }, { background: [] }],
+            // 字体颜色，字体背景颜色
+            [{ font: [] }],
+            //字体
+            [{ align: [] }],
+            //链接
+            ["link"],
+            //对齐方式
+            ["clean"],
+            //清除字体样式
+            ["image", "video"],
+            //上传图片、上传视频
+          ],
         },
-      ],
+        theme: "snow",
+      },
       // 当前页面的属性分组
       currentAttributeArr: [],
       //全部属性数组
@@ -165,6 +214,10 @@ export default {
       is_delete: true,
       //推荐类型
       type: [],
+      //新品
+      is_new: 0,
+      //人气
+      is_hot: 0,
     };
   },
   created() {
@@ -189,7 +242,8 @@ export default {
       this.imageUrl = res[1].data.list_pic_url;
       this.is_delete = res[1].data.is_delete == 1 ? false : true;
       this.currentAttributeArr = res[1].data.attribute;
-      console.log(res[1].data.attribute);
+      this.content = res[1].data.goods_desc;
+      // console.log(res[1].data.goods_desc);
       let is_new = res[1].data.is_new ? "新品" : "";
       let is_hot = res[1].data.is_hot ? "人气" : "";
       this.type.push(is_new, is_hot);
@@ -204,7 +258,6 @@ export default {
       size: 110,
     }).then((res) => {
       this.attributeData = res.data.data;
-      console.log(res);
     });
   },
   methods: {
@@ -241,27 +294,72 @@ export default {
     },
     //轮播图文件列表移除文件时的钩子
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      // console.log(file, fileList);
     },
     //轮播图点击文件列表中已上传的文件时的钩子
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
+      console.log(file.url);
+      // this.ShufflingArr.pushu(file.url);
       this.dialogVisible = true;
     },
-    // 编辑新增商品
-    saveEditorNewGood() {
-      editorNewGoodAPI({}).then((res) => {
+    // 确认保存
+    saveEditorNewGood(form) {
+      this.type.map((el) => {
+        this.is_new = el === "新品" ? 1 : 0;
+      });
+      this.type.map((el) => {
+        this.is_hot = el === "人气" ? 1 : 0;
+      });
+      console.log(this.currentAttributeArr);
+      editorNewGoodAPI({
+        id: form.id,
+        category_id: Number(form.category_id),
+        name: form.name,
+        brand_id: Number(form.brand_id),
+        goods_number: Number(form.goods_number),
+        goods_brief: form.goods_brief,
+        goods_desc: form.goods_desc,
+        sort_order: 10,
+        is_delete: this.is_delete ? 0 : 1,
+        is_new: Number(this.is_new),
+        goods_unit: form.goods_unit,
+        primary_pic_url: form.primary_pic_url,
+        list_pic_url: this.imageUrl,
+        retail_price: Number(form.retail_price),
+        is_hot: this.is_hot,
+        attribute: this.attributeData,
+        gallerys:this.currentAttributeArr,
+      }).then((res) => {
         console.log(res);
       });
     },
+    // 取消
+    cancel() {
+      this.$router.back(-1);
+    },
     //添加商品属性
     addGoodsAttribute() {
-      this.currentAttributeArr.push({});
-    },
-    handleDelete(index, row) {
-      this.currentAttributeArr.forEach((el) => {
-        if (el.id == row.id) this.currentAttributeArr.splice(1, 1, el);
+      this.currentAttributeArr.push({
+        goods_id: Number(this.$route.params.gid),
+        id: 0,
       });
+    },
+    //删除商品属性
+    handleDelete(index, row) {
+      this.currentAttributeArr.map((el) => {
+        if (row.attribute_id === el.attribute_id) {
+          this.currentAttributeArr.splice(index, 1);
+        }
+      });
+    },
+    onEditorReady(editor) {
+      // 准备编辑器
+    },
+    onEditorBlur() {}, // 失去焦点事件
+    onEditorFocus() {}, // 获得焦点事件
+    onEditorChange() {}, // 内容改变事件
+    saveHtml: function (event) {
+      alert(this.content);
     },
   },
 };

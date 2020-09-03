@@ -20,3 +20,7 @@ export const getStatDataAPI = () => request.get('http://kumanxuan1.f3322.net:836
 export const editorNewGoodAPI = (params) => request.post('http://kumanxuan1.f3322.net:8360/admin/goods/store', params) 
 // 查询属性列表
 export const getQueryAttributeAPI = (params) => request.get('http://kumanxuan1.f3322.net:8360/admin/attribute', { params })
+// 查询分类接口
+export const getCategoryAPI = () => request.get('http://kumanxuan1.f3322.net:8360/admin/category')
+// 查询专题列表
+export const getQueryTopicAPI = () => request.get('http://kumanxuan1.f3322.net:8360/admin/topic')
