@@ -1,7 +1,7 @@
 <template>
   <div class="editbrand">
-    <el-form ref="form" :model="brand" :rules="rules" label-width="80px">
-      <el-form-item :required="false" label="活动名称" prop="brandName">
+    <el-form ref="brand"  :model="brand" :rules="rules" label-width="80px">
+      <el-form-item  label="活动名称" prop="name">
         <el-input v-model="brand.name"></el-input>
       </el-form-item>
       <el-form-item label="品牌图片">
@@ -10,20 +10,35 @@
           action
           :show-file-list="false"
           name="good_pic"
-          :http-request="uploadRequest"
+          :http-request="uploadRequest1"
+          :headers="headers"
         >
           <img v-if="pic_url" :src="pic_url" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
       <el-form-item label="品牌列表图片">
-        <el-upload class="avatar-uploader" action :show-file-list="false">
+        <el-upload
+          class="avatar-uploader"
+          action
+          :show-file-list="false"
+          name="good_pic"
+          :http-request="uploadRequest2"
+          :headers="headers"
+        >
           <img v-if="list_pic_url" :src="list_pic_url" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
       <el-form-item label="app专用图片">
-        <el-upload class="avatar-uploader" action :show-file-list="false">
+        <el-upload
+          class="avatar-uploader"
+          action
+          :show-file-list="false"
+          name="good_pic"
+          :http-request="uploadRequest3"
+          :headers="headers"
+        >
           <img v-if="app_list_pic_url" :src="app_list_pic_url" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
@@ -37,10 +52,10 @@
       <el-form-item label="显示">
         <el-switch v-model="is_show"></el-switch>
       </el-form-item>
-      <el-form-item :required="false" label="排序" prop="sorting">
+      <el-form-item  label="排序" prop="new_sort_order">
         <el-input v-model="brand.new_sort_order"></el-input>
       </el-form-item>
-      <el-form-item :required="false" label="品牌描述" prop="describe">
+      <el-form-item  label="品牌描述" prop="simple_desc">
         <el-input type="textarea" v-model="brand.simple_desc"></el-input>
       </el-form-item>
       <el-form-item label>
@@ -52,7 +67,11 @@
 </template>
  
 <script>
-import { GetBrandDetailsAPI, NewEditGoodBrandAPI,uploadNewPicAPI } from "@/request/api.js";
+import {
+  GetBrandDetailsAPI,
+  NewEditGoodBrandAPI,
+  uploadNewPicAPI,
+} from "@/request/api.js";
 export default {
   data() {
     return {
@@ -70,11 +89,11 @@ export default {
         "X-Nideshop-Token": localStorage.getItem("token"),
       },
       rules: {
-        brandName: [
+        name: [
           { required: true, message: "名称不能为空", trigger: "blur" },
         ],
-        sorting: [{ required: true, message: "排序不能为空", trigger: "blur" }],
-        describe: [
+        new_sort_order: [{ required: true, message: "排序不能为空", trigger: "blur" }],
+        simple_desc: [
           { required: true, message: "品牌描述不能为空", trigger: "blur" },
         ],
       },
@@ -94,7 +113,6 @@ export default {
       this.app_list_pic_url = res.data.app_list_pic_url;
       this.is_new = res.data.is_new ? true : false;
       this.is_show = res.data.is_show ? true : false;
-      console.log(res.data);
     });
   },
   methods: {
@@ -104,25 +122,53 @@ export default {
     },
     //保存按钮
     saveBrand() {
-      console.log(this.brand.list_pic_url);
+      console.log(this.brand.new_sort_order);
       NewEditGoodBrandAPI({
         id: this.$route.params.bid,
         name: this.brand.name,
-        // list_pic_url:
+        list_pic_url: this.pic_url,
+        simple_desc: this.brand.simple_desc,
+        pic_url: this.pic_url,
+        sort_order: this.brand.sort_order,
+        is_show: this.is_show,
+        floor_price: this.brand.floor_price,
+        app_list_pic_url: this.app_list_pic_url,
+        is_new: this.is_new,
+        new_pic_url: this.brand.new_pic_url,
+        new_sort_order: this.brand.new_sort_order,
       }).then((res) => {
-        console.log(res);
+        if (res.errno === 0) {
+          this.$message({
+            message: "品牌信息修改成功",
+            type: "success",
+          });
+          this.$router.go(-1);
+        }
       });
     },
-    //上传图片请求
-    uploadRequest(data) {
+    //品牌图片上传图片请求
+    uploadRequest1(data) {
+      let formdata = new FormData();
+      formdata.append("good_pic", data.file);
+      uploadNewPicAPI(formdata).then((res) => {
+        if (res.errno === 0) this.pic_url = res.data.fileUrl;
+      });
+    },
+    //品牌列表图片上传图片请求
+    uploadRequest2(data) {
       let formdata = new FormData();
       formdata.append("good_pic", data.file);
       uploadNewPicAPI(formdata).then((res) => {
         if (res.errno === 0) this.list_pic_url = res.data.fileUrl;
       });
     },
-    onSubmit() {
-      console.log("submit!");
+    //app专用图片上传图片请求
+    uploadRequest3(data) {
+      let formdata = new FormData();
+      formdata.append("good_pic", data.file);
+      uploadNewPicAPI(formdata).then((res) => {
+        if (res.errno === 0) this.app_list_pic_url = res.data.fileUrl;
+      });
     },
   },
 };

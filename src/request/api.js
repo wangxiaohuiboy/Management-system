@@ -34,3 +34,12 @@ export const QueryOrderListAPI = (params) => request.get("http://kumanxuan1.f332
 export const GetBrandDetailsAPI = (params) => request.get('http://kumanxuan1.f3322.net:8360/admin/brand/info', { params })
 // 新增/编辑品牌详情
 export const NewEditGoodBrandAPI = (params) => request.post('http://kumanxuan1.f3322.net:8360/admin/brand/store', params)
+// 属性详情
+export const GetAttributeDetailsAPI = (params) => request.get("http://kumanxuan1.f3322.net:8360/admin/attribute/info", { params })
+// 查询顶级分类
+export const QueryTopClassificationAPI = () => request.get("http://kumanxuan1.f3322.net:8360/admin/category/topCategory")
+// 分类详情
+export const GetClassificationDetailsAPI = (params) => request.get("http://kumanxuan1.f3322.net:8360/admin/category/info", { params }
+)
+// 编辑/新增分类
+export const EditorNewClassificationAPI = (params) => request.post("http://kumanxuan1.f3322.net:8360/admin/category/store", params)

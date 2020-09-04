@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item label="分类">
         <el-button type="primary" size="small" @click="onQuery">查询</el-button>
-        <el-button type="primary" size="small">添加</el-button>
+        <el-button type="primary" size="small" @click="onAdd">添加</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="BrandData" border style="width: 100%">
@@ -69,7 +69,6 @@ export default {
         this.count = res.data.count;
         this.pageSize = res.data.pageSize;
         this.currentPage = res.data.currentPage;
-        console.log(res.data);
       });
     },
     //分页器-每页几条
@@ -91,6 +90,10 @@ export default {
     handleEdit(index, row) {
       this.$router.push("/editbrand/" + row.id);
     },
+    //添加
+    onAdd(){
+        this.$router.push('/editbrand/' + 0)
+    }
   },
 };
 </script>

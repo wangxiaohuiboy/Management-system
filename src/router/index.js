@@ -23,6 +23,14 @@ const routes = [
 ]
 
 var homepageRoutes = {
+  "/editcategory": {
+    path: "/editcategory/:cid",
+    component: () => import(/* webpackChunkName: "editcategory" */ '../views/category/EditCategory.vue')
+  },
+  "/editattribute": {
+    path: "/editattribute/:aid",
+    component: () => import(/* webpackChunkName: "editattribute" */ '../views/attribute/EditAttribute.vue')
+  },
   "/editbrand": {
     path: "/editbrand/:bid",
     component: () => import(/* webpackChunkName: "editbrand" */ '../views/brand/EditBrand.vue')
