@@ -4,7 +4,7 @@
       <el-form-item label="名称">
         <el-input style="width: 177px;height: 32px;" v-model="topicQuery"></el-input>
         <el-button size="small" type="primary" @click="QueryData">查询</el-button>
-        <el-button size="small" type="primary">添加</el-button>
+        <el-button size="small" type="primary" @click="handleEdit2">添加</el-button>
       </el-form-item>
       <el-table :data="TopicData" border style="width: 100%">
         <el-table-column prop="id" label="ID"></el-table-column>
@@ -53,6 +53,10 @@ export default {
     };
   },
   methods: {
+    //添加专题
+    handleEdit2(){
+      this.$router.push("/edittopic/" + 0);
+    },
     //编辑页面跳转
     handleEdit(index, row) {
       this.$router.push("/edittopic/" + row.id);
@@ -83,7 +87,6 @@ export default {
         this.count = res.data.count;
         this.currentPage = res.data.currentPage;
         this.pageSize = res.data.pageSize;
-        console.log(res);
       });
     },
   },

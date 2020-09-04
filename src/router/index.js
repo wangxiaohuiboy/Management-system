@@ -23,6 +23,10 @@ const routes = [
 ]
 
 var homepageRoutes = {
+  "/editbrand": {
+    path: "/editbrand/:bid",
+    component: () => import(/* webpackChunkName: "editbrand" */ '../views/brand/EditBrand.vue')
+  },
   "/edittopic": {
     path: "/edittopic/:tid",
     component: () => import(/* webpackChunkName: "edittopic" */ '../views/topic/EditTopic.vue')

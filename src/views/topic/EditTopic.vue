@@ -40,8 +40,8 @@
         ></quill-editor>
       </el-form-item>
       <el-form-item label style="margin-top:80px;margin-left:20px">
-        <el-button type="primary">保存</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary" :plain="true" @click="saveTopic">保存</el-button>
+        <el-button @click="cancelTopic">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -52,7 +52,11 @@ import { quillEditor } from "vue-quill-editor";
 import * as Quill from "quill"; //引入编辑器
 import { ImageDrop } from "quill-image-drop-module";
 Quill.register("modules/imageDrop", ImageDrop);
-import { getProjectDetailsAPI } from "@/request/api.js";
+import {
+  getProjectDetailsAPI,
+  editorNewTopicAPI,
+  uploadNewPicAPI,
+} from "@/request/api.js";
 export default {
   data() {
     return {
@@ -108,6 +112,7 @@ export default {
     };
   },
   created() {
+    //专题详情请求
     getProjectDetailsAPI({
       id: this.$route.params.tid,
     }).then((res) => {
@@ -118,16 +123,49 @@ export default {
     });
   },
   methods: {
+    // 取消按钮
+    cancelTopic() {
+      this.$router.go(-1);
+    },
+    // 保存
+    saveTopic() {
+      editorNewTopicAPI({
+        id: this.$route.params.tid,
+        title: this.ProjectDetails.title,
+        content: this.content,
+        subtitle: this.ProjectDetails.subtitle,
+        topic_category_id: this.ProjectDetails.topic_category_id,
+        price_info: this.ProjectDetails.price_info,
+        read_count: this.ProjectDetails.read_count,
+        scene_pic_url: this.ProjectDetailsimageUrl,
+        topic_template_id: this.ProjectDetails.topic_template_id,
+        topic_tag_id: this.ProjectDetails.topic_tag_id,
+        sort_order: this.ProjectDetails.sort_order,
+        is_show: this.is_show,
+      }).then((res) => {
+        if (res.errno === 0) {
+          this.$message({
+            message: "品牌信息修改成功",
+            type: "success",
+          });
+          this.$router.go(-1);
+        }
+      });
+    },
     //上传图片的请求
     uploadRequest(data) {
-      console.log(data);
+      let formdata = new FormData();
+      formdata.append("good_pic", data.file);
+      uploadNewPicAPI(formdata).then((res) => {
+        if (res.errno === 0) this.ProjectDetailsimageUrl = res.data.fileUrl;
+      });
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
     },
-    onEditorBlur() {}, // 失去焦点事件
-    onEditorFocus() {}, // 获得焦点事件
-    onEditorChange() {}, // 内容改变事件
+    onEditorBlur(event) {}, // 失去焦点事件
+    onEditorFocus(event) {}, // 获得焦点事件
+    onEditorChange(event) {}, // 内容改变事件
     saveHtml: function (event) {
       alert(this.content);
     },
