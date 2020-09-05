@@ -39,7 +39,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="saveEditcategory">保存</el-button>
-        <el-button>取消</el-button>
+        <el-button @click="cancelEditcategory">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -120,8 +120,18 @@ export default {
         front_name: this.editcategory.front_name,
         is_new: this.editcategory.is_new,
       }).then((res) => {
-        console.log(res);
+        if (res.errno === 0) {
+          this.$message({
+            message: "分类信息修改成功",
+            type: "success",
+          });
+          this.$router.go(-1);
+        }
       });
+    },
+    //取消
+    cancelEditcategory() {
+      this.$router.go(-1);
     },
   },
 };
@@ -129,7 +139,7 @@ export default {
  
 <style lang = "less" scoped>
 .editcategory {
-  height: 98%;
+  /* height: 98%; */
   padding: 10px;
   background: #fff;
   overflow-y: auto;

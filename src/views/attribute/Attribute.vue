@@ -1,6 +1,6 @@
 <template>
   <div class="attribute">
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+    <el-form :inline="true" class="demo-form-inline">
       <el-form-item label="名称">
         <el-input v-model="attName" placeholder="属性名称"></el-input>
       </el-form-item>
@@ -16,13 +16,15 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" size="small" @click="onQueryAttribute">查询</el-button>
-        <el-button type="primary" size="small">添加</el-button>
+        <el-button type="primary" size="small" @click="onAddAttribute">添加</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="attributeData" border style="width: 100%">
       <el-table-column prop="id" label="ID"></el-table-column>
       <el-table-column prop="name" label="属性名称"></el-table-column>
-      <el-table-column prop="address" label="属性分类"></el-table-column>
+      <el-table-column prop="attribute_category_id" label="属性分类">
+        <div slot-scope="scope">{{attribute_category[scope.row.attribute_category_id]?attribute_category[scope.row.attribute_category_id].name:''}}</div>
+      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -46,9 +48,6 @@ import { getQueryAttributeAPI, getCategoryAPI } from "@/request/api.js";
 export default {
   data() {
     return {
-      formInline: {
-        user: "",
-      },
       //属性名称
       attName: "",
       //属性列表
@@ -68,10 +67,20 @@ export default {
     //分类请求
     getCategoryAPI().then((res) => {
       this.attribute_category = res.data;
-      //   console.log(res.data);
+      let obj = {};
+      res.data.map((el) => {
+        if (!obj[el.id]) {
+          obj[el.id] = el;
+        }
+      });
+      this.attribute_category = obj;
     });
   },
   methods: {
+    //添加按钮
+    onAddAttribute() {
+      this.$router.push("/editattribute/" + 0);
+    },
     //查询
     onQueryAttribute() {
       this.currentPage = 1;
@@ -103,7 +112,6 @@ export default {
         this.count = res.data.count;
         this.pageSize = res.data.pageSize;
         this.currentPage = res.data.currentPage;
-        console.log(res.data);
       });
     },
   },

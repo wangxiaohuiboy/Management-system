@@ -1,6 +1,6 @@
 <template>
   <div class="category">
-    <el-button style="margin-bottom:20px" type="primary" size="mini">添加</el-button>
+    <el-button style="margin-bottom:20px" type="primary" size="mini" @click="categoryAdd">添加</el-button>
     <el-table :data="categoryData" border style="width: 100%">
       <el-table-column prop="id" label="ID"></el-table-column>
       <el-table-column prop="name" label="分类名称"></el-table-column>
@@ -45,6 +45,10 @@ export default {
     handleEdit(index, row) {
       this.$router.push("/editcategory/" + row.id)
     },
+    //添加按钮
+    categoryAdd(){
+      this.$router.push("/editcategory/" + 0)
+    }
   },
 };
 </script>

@@ -4,8 +4,8 @@
       <div class="good-top">
         <el-input type="text" placeholder="商品名称" autocomplete="off" v-model="userQueryGood"></el-input>
         <el-button @click="queryGoods" size="small" type="primary">查询</el-button>
-        <el-button size="small" type="primary">添加</el-button>
-        <el-button size="small" type="primary">重置</el-button>
+        <el-button size="small" type="primary" @click="addGoods">添加</el-button>
+        <el-button size="small" type="primary" @click="resetGoods">重置</el-button>
       </div>
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column prop="id" label="ID"></el-table-column>
@@ -94,6 +94,14 @@ export default {
     handleEdit(a, row) {
       this.$router.push("/editgood/" + row.id);
     },
+    //添加按钮
+    addGoods() {
+      this.$router.push("/editgood/" + 0);
+    },
+    //重置
+    resetGoods() {
+      this.userQueryGood = null;
+    },
   },
 };
 </script>
@@ -101,7 +109,7 @@ export default {
 <style lang = "less" scoped>
 .good {
   height: 97%;
-  padding: 15px 15px;
+  /* padding: 10px; */
   overflow-y: auto;
   box-sizing: border-box;
   .goodContent {

@@ -23,7 +23,7 @@ export default {
   left: 250px;
   right: 0;
   bottom: 0;
-  background: pink;
+  background: #f0f0f0;
   transition: all 0.4s;
   padding: 15px 15px 8px;
   .content-bottom {

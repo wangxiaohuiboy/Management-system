@@ -46,16 +46,15 @@
               name="good_pic"
               :http-request="uploadRequest2"
               list-type="picture-card"
-              :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
               :show-file-list="true"
               :file-list="ShufflingArr"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
+            <!-- <el-dialog :visible.sync="dialogVisible">
               <img width="100%" :src="dialogImageUrl" alt />
-            </el-dialog>
+            </el-dialog>-->
           </el-form-item>
           <el-form-item label="商品单位">
             <el-input v-model="form.goods_unit"></el-input>
@@ -84,7 +83,7 @@
           </div>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="商品属性">
+      <el-tab-pane v-if="$route.params.gid==0?false:true" label="商品属性">
         <el-button style="margin-bottom:10px" type="primary" @click="addGoodsAttribute">添加商品属性</el-button>
         <el-table border :data="currentAttributeArr" style="width: 100%">
           <el-table-column label="参数名称">
@@ -218,6 +217,8 @@ export default {
       is_new: 0,
       //人气
       is_hot: 0,
+      //最终上传的轮播图
+      endShufflingArr: [],
     };
   },
   created() {
@@ -244,11 +245,12 @@ export default {
       this.currentAttributeArr = res[1].data.attribute;
       this.content = res[1].data.goods_desc;
       // console.log(res[1].data.goods_desc);
-      let is_new = res[1].data.is_new ? "新品" : "";
-      let is_hot = res[1].data.is_hot ? "人气" : "";
+      let is_new = res[1].data.is_new ? "新品" : null;
+      let is_hot = res[1].data.is_hot ? "人气" : null;
       this.type.push(is_new, is_hot);
+      console.log(this.type);
       res[1].data.gallery.map((el) => {
-        let obj = { name: "", url: el.img_url };
+        let obj = { name: "good_pic", url: el.img_url };
         this.ShufflingArr.push(obj);
       });
     });
@@ -263,9 +265,19 @@ export default {
   methods: {
     // 轮播图上传图片接口
     uploadRequest2(data) {
+      console.log(data.file.uid);
       let formdata = new FormData();
       formdata.append("good_pic", data.file);
-      uploadNewPicAPI(formdata).then((res) => {});
+      uploadNewPicAPI(formdata).then((res) => {
+        if (res.errno === 0) {
+          let obj = {
+            uid: data.file.uid,
+            name: "good_pic",
+            url: res.data.fileUrl,
+          };
+          this.ShufflingArr.push(obj);
+        }
+      });
     },
     //上传图片请求
     uploadRequest(data) {
@@ -294,23 +306,21 @@ export default {
     },
     //轮播图文件列表移除文件时的钩子
     handleRemove(file, fileList) {
-      // console.log(file, fileList);
-    },
-    //轮播图点击文件列表中已上传的文件时的钩子
-    handlePictureCardPreview(file) {
-      console.log(file.url);
-      // this.ShufflingArr.pushu(file.url);
-      this.dialogVisible = true;
+      this.ShufflingArr = fileList;
     },
     // 确认保存
     saveEditorNewGood(form) {
       this.type.map((el) => {
+        console.log(el);
         this.is_new = el === "新品" ? 1 : 0;
       });
       this.type.map((el) => {
         this.is_hot = el === "人气" ? 1 : 0;
       });
-      console.log(this.currentAttributeArr);
+      console.log(this.type);
+      this.ShufflingArr.map((el) => {
+        this.endShufflingArr.push(el.url);
+      });
       editorNewGoodAPI({
         id: form.id,
         category_id: Number(form.category_id),
@@ -318,8 +328,8 @@ export default {
         brand_id: Number(form.brand_id),
         goods_number: Number(form.goods_number),
         goods_brief: form.goods_brief,
-        goods_desc: form.goods_desc,
-        sort_order: 10,
+        goods_desc: this.content,
+        sort_order: form.sort_order,
         is_delete: this.is_delete ? 0 : 1,
         is_new: Number(this.is_new),
         goods_unit: form.goods_unit,
@@ -327,10 +337,16 @@ export default {
         list_pic_url: this.imageUrl,
         retail_price: Number(form.retail_price),
         is_hot: this.is_hot,
-        attribute: this.attributeData,
-        gallerys:this.currentAttributeArr,
+        attribute: this.currentAttributeArr,
+        gallerys: this.endShufflingArr,
       }).then((res) => {
-        console.log(res);
+        if (res.errno === 0) {
+          this.$message({
+            message: "商品信息修改成功",
+            type: "success",
+          });
+          // this.$router.go(-1);
+        }
       });
     },
     // 取消

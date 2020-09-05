@@ -43,3 +43,5 @@ export const GetClassificationDetailsAPI = (params) => request.get("http://kuman
 )
 // 编辑/新增分类
 export const EditorNewClassificationAPI = (params) => request.post("http://kumanxuan1.f3322.net:8360/admin/category/store", params)
+//编辑/新增属性
+export const EditorNewAttributeAPI = (params) => request.post('http://kumanxuan1.f3322.net:8360/admin/attribute/store', params) 
