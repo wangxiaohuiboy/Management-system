@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     menu: [],
     isCollapse: false,
+    UserPermissions:""
   },
   mutations: {
     setmenu(state, payload) {
@@ -14,6 +15,10 @@ export default new Vuex.Store({
     },
     setisCollapse(state) {
       state.isCollapse = !state.isCollapse;
+    },
+    //获取当前用户权限
+    GetUserPermissions(state,payload){
+      state.UserPermissions = payload;
     }
   },
   actions: {

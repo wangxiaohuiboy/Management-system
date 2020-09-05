@@ -66,9 +66,11 @@
             <el-input v-model="form.retail_price"></el-input>
           </el-form-item>
           <el-form-item label="推荐类型">
-            <el-checkbox-group v-model="type">
-              <el-checkbox label="新品" name="type"></el-checkbox>
-              <el-checkbox label="人气" name="type"></el-checkbox>
+            <el-checkbox-group style="float:left" v-model="is_new">
+              <el-checkbox label="新品"></el-checkbox>
+            </el-checkbox-group>
+            <el-checkbox-group style="float:left;margin-left:30px" v-model="is_hot">
+              <el-checkbox label="人气"></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="上架">
@@ -211,12 +213,10 @@ export default {
       dialogVisible: false,
       //是否上架
       is_delete: true,
-      //推荐类型
-      type: [],
       //新品
-      is_new: 0,
+      is_new: true,
       //人气
-      is_hot: 0,
+      is_hot: true,
       //最终上传的轮播图
       endShufflingArr: [],
     };
@@ -244,11 +244,8 @@ export default {
       this.is_delete = res[1].data.is_delete == 1 ? false : true;
       this.currentAttributeArr = res[1].data.attribute;
       this.content = res[1].data.goods_desc;
-      // console.log(res[1].data.goods_desc);
-      let is_new = res[1].data.is_new ? "新品" : null;
-      let is_hot = res[1].data.is_hot ? "人气" : null;
-      this.type.push(is_new, is_hot);
-      console.log(this.type);
+      this.is_new = res[1].data.is_new ? true : false;
+      this.is_hot = res[1].data.is_hot ? true : false;
       res[1].data.gallery.map((el) => {
         let obj = { name: "good_pic", url: el.img_url };
         this.ShufflingArr.push(obj);
@@ -310,14 +307,6 @@ export default {
     },
     // 确认保存
     saveEditorNewGood(form) {
-      this.type.map((el) => {
-        console.log(el);
-        this.is_new = el === "新品" ? 1 : 0;
-      });
-      this.type.map((el) => {
-        this.is_hot = el === "人气" ? 1 : 0;
-      });
-      console.log(this.type);
       this.ShufflingArr.map((el) => {
         this.endShufflingArr.push(el.url);
       });
@@ -331,12 +320,12 @@ export default {
         goods_desc: this.content,
         sort_order: form.sort_order,
         is_delete: this.is_delete ? 0 : 1,
-        is_new: Number(this.is_new),
+        is_new: this.is_new ? 1 : 0,
         goods_unit: form.goods_unit,
         primary_pic_url: form.primary_pic_url,
         list_pic_url: this.imageUrl,
         retail_price: Number(form.retail_price),
-        is_hot: this.is_hot,
+        is_hot: this.is_hot ? 1 : 0,
         attribute: this.currentAttributeArr,
         gallerys: this.endShufflingArr,
       }).then((res) => {
@@ -345,7 +334,7 @@ export default {
             message: "商品信息修改成功",
             type: "success",
           });
-          // this.$router.go(-1);
+          this.$router.go(-1);
         }
       });
     },

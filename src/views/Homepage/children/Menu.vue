@@ -3,7 +3,7 @@
       <el-menu
         :default-active="activeRoute"
         class="el-menu-vertical-demo"
-        :class="this.$store.state.isCollapse==true?'':'active'"
+        :class="this.$store.state.isCollapse==true?'beforeActive':'active'"
         background-color="#324056"
         text-color="#BFCBD9"
         active-text-color="#20A0FF"
@@ -126,12 +126,15 @@ export default {
   background: rgb(50, 65, 87);
   overflow-y: auto;
   .el-menu {
-    width: 100%;
     background: rgb(50, 65, 87);
   }
 }
 .active {
   width: 250px;
+}
+.beforeActive{
+  width:70px;
+  transition: all .4s;
 }
 
 .menu::-webkit-scrollbar {

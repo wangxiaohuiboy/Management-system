@@ -8,7 +8,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: "/",
-    redirect: "/homepage"
+    redirect: "/good"
   },
   {
     path: '/login',
@@ -108,6 +108,9 @@ router.beforeEach((to, from, next) => {
     // 发送请求
     getUserByToken().then(res => {
       if (res.errno === 0) {
+        //获取用户权限
+        console.log(res.data.userInfo.username);
+        store.commit("GetUserPermissions",res.data.userInfo.username)
         // menu存到vuex
         store.commit('setmenu', res.data.menu);
         // 动态添加当前登录用户的路由规则

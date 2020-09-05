@@ -2,7 +2,7 @@ import axios from 'axios'
 
 //创建实例
 const instance = axios.create({
-    baseURL:"",
+    baseURL:"http://kumanxuan1.f3322.net:8360",
     timeout: 5000
 });
 
