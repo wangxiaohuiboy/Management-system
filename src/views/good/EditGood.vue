@@ -262,7 +262,6 @@ export default {
   methods: {
     // 轮播图上传图片接口
     uploadRequest2(data) {
-      console.log(data.file.uid);
       let formdata = new FormData();
       formdata.append("good_pic", data.file);
       uploadNewPicAPI(formdata).then((res) => {
@@ -311,18 +310,17 @@ export default {
         this.endShufflingArr.push(el.url);
       });
       editorNewGoodAPI({
-        id: form.id,
         category_id: Number(form.category_id),
         name: form.name,
         brand_id: Number(form.brand_id),
         goods_number: Number(form.goods_number),
         goods_brief: form.goods_brief,
         goods_desc: this.content,
-        sort_order: form.sort_order,
+        sort_order: Number(form.sort_order),
         is_delete: this.is_delete ? 0 : 1,
         is_new: this.is_new ? 1 : 0,
         goods_unit: form.goods_unit,
-        primary_pic_url: form.primary_pic_url,
+        primary_pic_url: form.primary_pic_url?form.primary_pic_url:'',
         list_pic_url: this.imageUrl,
         retail_price: Number(form.retail_price),
         is_hot: this.is_hot ? 1 : 0,

@@ -74,6 +74,7 @@ export default {
         }
       });
       this.attribute_category = obj;
+      console.log(this.attribute_category);
     });
   },
   methods: {

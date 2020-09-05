@@ -4,7 +4,12 @@
       <div class="good-top">
         <el-input type="text" placeholder="商品名称" autocomplete="off" v-model="userQueryGood"></el-input>
         <el-button @click="queryGoods" size="small" type="primary">查询</el-button>
-        <el-button v-if="$store.state.UserPermissions=='admin'?true:false" size="small" type="primary" @click="addGoods">添加</el-button>
+        <el-button
+          v-if="$store.state.UserPermissions=='test'?false:true"
+          size="small"
+          type="primary"
+          @click="addGoods"
+        >添加</el-button>
         <el-button size="small" type="primary" @click="resetGoods">重置</el-button>
       </div>
       <el-table :data="tableData" border style="width: 100%">
@@ -24,7 +29,12 @@
         <el-table-column prop="sort_order" label="排序"></el-table-column>
         <el-table-column prop="address" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button v-if="$store.state.UserPermissions=='admin'?true:false" size="small" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button
+              v-if="$store.state.UserPermissions=='test'?false:true"
+              size="small"
+              type="primary"
+              @click="handleEdit(scope.$index, scope.row)"
+            >编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -56,9 +66,14 @@ export default {
       pageSize: 10,
       // 用户查询的商品
       userQueryGood: "",
+      //path路径
+      path: [],
     };
   },
   created() {
+    this.$store.state.menu.map((el) => {
+      this.path.push(el.path);
+    });
     this.GetGoodList();
   },
   methods: {

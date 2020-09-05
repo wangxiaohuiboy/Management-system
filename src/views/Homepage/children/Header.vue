@@ -6,7 +6,7 @@
     </div>
     <el-dropdown @command="handleCommand" trigger="click">
       <span class="el-dropdown-link">
-        admin
+        {{this.$store.state.UserPermissions}}
         <i class="el-icon-caret-bottom"></i>
       </span>
       <el-dropdown-menu slot="dropdown">

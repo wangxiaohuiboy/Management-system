@@ -58,6 +58,7 @@ export default {
               // 权限菜单存到vuex
               this.$store.commit("setmenu", res.data.menu);
               // 跳转
+              window.location.reload()
               this.$router.push("/homepage");
             } else {
               this.$message({
